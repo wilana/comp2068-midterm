@@ -6,31 +6,35 @@ const Data = () => {
   const APILINK = 'https://jsonplaceholder.typicode.com/posts';
 
   const [data, setData] = useState([]);
-  const info = useMemo(() => data, [data]);
-
+  const dataSet = useMemo(() => data, [data]);
+  
+  // a state variable for the sort order
   const [order, setOrder] = useState(true);
+  // a state variable that doesn't change to refer to in filter
+  const [fullDataSet, setFullDataSet] = useState([]);
+  const [value, setValue] = useState("");
 
   useEffect(() => {
     axios.get(APILINK)
     .then(resp => {
       setData(resp.data);
+      setFullDataSet(resp.data);
     });
   }, []);
 
-  // const filter = event => {
-  //   event.persist();
-  //   const value = event.target.value;
-    
-  //   if (value.length === 0) {
-  //     setData([...dataSet]);
-  //   } else if (isNaN(value)) {
-  //     const regex = new RegExp(value);
-  //     setData([...dataSet.filter(datum => (regex.test(datum.title) || regex.test(datum.body)))]);
-  //   } else {
-  //     const num = Number(value);
-  //     setData([...dataSet.filter(datum => (Number(datum.userId) === num || Number(datum.id) === num))]);
-  //   }
-  // };
+  useEffect( () => {
+    //show all data
+    if (value.length === 0) {
+      setData([...fullDataSet]);
+    } else if (isNaN(value)) {
+      // looking for string
+      const regex = new RegExp(value);
+      setData([...fullDataSet.filter(datum => (regex.test(datum.title) || regex.test(datum.body)))]);
+    } else {
+      const num = Number(value);
+      setData([...fullDataSet.filter(datum => (Number(datum.userId) === num || Number(datum.id) === num))]);
+    }
+  }, [value, fullDataSet]);
 
   const sort = (event, name, type) => {
     event.persist();
@@ -71,7 +75,7 @@ const Data = () => {
           </div>
 
           <div className="col-auto">
-            {/* <input type="text" name="filter" className="form-control" onChange={filter}/> */}
+            <input type="text" name="filter" className="form-control" onChange={({target: {value}}) => setValue(value)}/>
           </div>
         </div>
 
@@ -86,7 +90,7 @@ const Data = () => {
           </thead>
 
           <tbody>
-            {info.map((entry, i) => (
+            {dataSet.map((entry, i) => (
               <tr key={entry.id}>
                 <td>{entry.userId}</td>
                 <td>{entry.id}</td>
