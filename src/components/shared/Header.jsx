@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 
-const Header = ({ title = "Test Time" }) => {
+const Header = ({title}) => {
   useEffect(() => document.title = title);
-
-  return (
+  return ( 
     <header className="bg-dark p-5 rounded-lg m-3 text-center">
       <h1 className="text-white">{ title }</h1>
     </header>
-  );
+   );
 }
  
 export default Header;

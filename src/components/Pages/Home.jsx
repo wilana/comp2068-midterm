@@ -1,13 +1,15 @@
 
 import Header from '../shared/Header';
 
-
-  return (
+const Home = () => {
+  return ( 
     <>
       <div className="container-fluid">
         <Header title="Home Sweet Home"/>
       </div>
     </>
-  );
-
+   );
+}
+ 
+export default Home;
  
